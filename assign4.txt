@@ -1,0 +1,162 @@
+Assign4: Due 11:59PM April 20
+
+In this assignment we will design a logical characters processor. The processor will receive a series of characters as input and produce a series of characters as output. The processor may house any number of processing blocks. Not all blocks that are available may be used when creating a processor. Also, a block may be used more than once. The order in which the blocks are used may also vary.
+                                                            
+
+		...input... -> | block1 block2 block3 ... | -> ...output...
+                           Processor
+
+Let's discuss some examples of blocks and then revisit the processor.
+
+1. UpperCaseConverter Block
+	Given a character, this block will send out or return the character in uppercase.
+
+2. LowerCaseConverter Block
+	Given a character, this block will send out or return the character in lowercase.
+	
+3. Multiplier Block
+  Given a character, this block will send out or return two of the same character. For example, if it received 'a', it will produce 'aa'. If it receives '1', it will produce '11'.
+
+4. z-blocker Block
+  Given a character, if the character is a lowercase 'z', this block will not return or produce anything. If it is any other character, it will produce the given character as output. For example, 'a' will result in an output of 'a'.
+
+5. Z-blocker Block
+	This block will not return or produce an output if the character given is an uppercase 'Z'.
+	
+6. k-blocker Block
+   This block will not return or produce an output if the character given is lowercase 'k'.
+
+The program should allow end users to create other similar blocks they like.
+
+The end user should be able to create a processor using any series of blocks.
+
+For example, a user may create a processor with the following series of blocks:
+	UpperCaseConverter - Z-blocker - LowerCaseConverter
+	
+After creating this processor, if a user were to send the following series of characters as input:
+
+	11abcdabcdabcdzzaazzabcd
+
+it will return the following output:
+
+	11abcdabcdabcdaaabcd
+
+In addition to designing a few sample blocks and the processor, we will create a console based driver program.
+	
+Design the program in such a way that:
+
+1. A user can specify the blocks available for use before the program starts. This should include pre-defined blocks and user created blocks.
+
+2. The user can specify, through a file, the blocks they'd like to use and the order or sequence in which they'd like to use them.
+
+Think through the overall design of the program first. Then start with one small, but interesting and valuable part, and evolve the design and code incrementally.
+
+After completing the assignment answer these questions:
+
+1. What did you learn in this assignment?
+In this assignment, the followings are what we have learned form this assignment:
+
+We have learned how to use the test factory which reduces the duplication of test cases to test the similar classes with similar implementations. 
+
+We have learned how to write the test cases of knowing which class has been initialized in the converterFactoryTest class, like getClass().getName()
+
+We have learned how to use Class.forName() method and know how to use getDeclaredConstructor() to initialize different classes and make it DRY.
+
+We have learned how to avoid if statement and instead to pass the parameter in the constructor to make the code simple and dynamic with 100% coverage in the report.
+
+We have learned how to write the combinations of classes while writing the converterFactory class.
+
+We have learned even though we are implementing ui, we might still violate the DRY principle and miss writing some test cases which we should rolled back to start implementing from the simple easy codes with its test cases to make all test cases pass. 
+
+We have learned we should not believe our program is perfect once it is running on the requirements. We still have a lot needed to improve. 
+
+We have learned we always need someone who could help us to review our codes in the future.
+
+We have learned dynamic programming is very useful tools which we need to learn much about it, however, it is not very easy to debug and hard to understand at the beginning. 
+
+We also have learned about when and how to apply the design principles effectively. We started with a basic design and gradually we have evolved the code into a pattern. 
+
+2. What design principles did you use? List each one of them, discuss what this principle is, and give example(s) of where specifically you used it in this assignment.
+
+YAGNI : Even though, error control & exception handling are very important for any software development, we focused on creating different converters and blocks at the beginning. We postponed creating the processor which process the text at the end.    
+
+DRY: Duplication of code will make it expensive to identify and fix the bugs. Rather than duplicating the code across the classes we reused the existing function through inheritance to implement the recursion in the Converter class. We implemented the LetterBlocker class using this principle which passes the letter we want to block through the constructor which could customize any user defined blocks. We also implemented this principle in the ConverterBlockTest class's convert dynamicTest which will not duplicate the similar test cases based on different functionality of convert method with different test samples.
+
+DIP: Rather than tightly coupling each Converters and Blocker implementation, a Converter interface which consists of convert() is created and various implementations are defined by this classes and implemented it. Also, for the ConverterBlockTest class, we also implemented this principle which allow all the similar test cases to create their own test samples and initialize their own classes and run their own test cases.
+
+LSP: We implemented this principle in the LetterBlocker class which helps us create the k, z, Z predefined blocks and other user defined blocks. These blocks are created based on the parameter we passed in. During the function generalization, the LetterBlocker instance is generalized by the letter we passed in. It this way it helped us to create any kinds of letter blocks we want.
+	
+SRP:
+Each class is designed to uniquely implement the compute() method and no dependency was created among the classes. The test class also implement this method. Each test class implements their own test cases and there is no any dependency from other test class.
+
+2. What design patterns did you use? List each one of them, discuss what this pattern is, and give example(s) of where specifically you used it in this assignment.
+
+In this assignment we have implemented the following Design patterns
+
+Factory Method Pattern:
+The Factory method lets a class defer instantiation it uses to subclasses.In this assignment we have defined a ConverterBlockTest interface for
+creating an object with createInstance() and implemented the default test factory method which tests all the subclasses which are implemented from the interface.
+We let the subclasses kBlockTest,Z_BlockTest,zBlockTest,UpperCaseConverterBlockTest,LowerCaseConverterBlockTest and MultiplierBlockTest which implement the 
+ConverterBlockTest to over ride the createInstance() method and create the respective class object. We also let each class override the createSample() and create their own test sample.
+
+
+Cascade Method Pattern:
+Cascademethod pattern helps in reducing the verbosity of the code. In our assignment instead of using the series of methods separately on the object,
+we have cascaded the process of calling the methods.
+
+In ConverterFactory class the function createConverters is used to  read the String list of the user specified blocks in the input file and create a corresponding objects list .
+We have cascaded this process as below
+ return convertersDetails.stream()
+        		 .map(ConverterFactory::createConverter)
+        		 .collect(toList());
+
+
+In Multiplier class we cascaded the process of creating the multiples of the input passed in the convert function as below
+ return Stream.of(text.split(""))
+      	      .map(letter -> letter + letter)
+              .collect(joining(""));
+
+In ConverterBlockTest interface we have cascaded the process of testing the subclasses with their corresponding samples as below
+ return testSample.keySet()
+            	  .stream()
+                  .map(createDynamicTest);
+Composite Method pattern:
+
+The composite pattern describes a group of objects that is treated the same way as a single instance of the same type of object. In the driver class in order to process
+the input text with various blocks/converters specified by the user , it is important to treat all the converters as the single instance so that the output of one converter
+can be passed as an input to the next converter.We have particulary used this pattern ConverterFactory class which creates the list of converter objects in sequence 
+using createConverters().Which is then used in the driver class.
+
+
+Please bring forward the practices, techniques, and tools you have learned so far. This includes: 
+Good code quality
+Lightweight design
+Minimum code
+Automated testing                                                         
+Code coverage
+Continuous integration
+
+Total[10]: 88
+Program produces desired output for sample pre-defined converters [20]:
+All tests pass [10]:
+Test quality [10]:
+Code coverage [10]:        
+
+Code quality [10]:
+In main
+} catch (Exception exception) {
+  throw new RuntimeException("File not found or the path is incorrect");
+}
+
+should be
+
+} catch (Exception exception) {
+  System.out.println("ERROR: " + exception.getMessage());
+}
+
+Design quality [10]:
+Program works for one user defined converter with one parameter [10]:
+... for an additional user defined converter with two parameters [10]: -10
+
+Response to questions [10]: -2
+We used abstract factory also to dynamically create converters.

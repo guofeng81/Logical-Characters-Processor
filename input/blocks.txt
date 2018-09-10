@@ -1,0 +1,3 @@
+blocks.UpperCaseConverter
+blocks.LetterBlocker Z
+blocks.LowerCaseConverter

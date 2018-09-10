@@ -1,0 +1,3 @@
+blocks.UpperCaseConverter
+thirdparty.Exclamation .
+thirdparty.Replace B C

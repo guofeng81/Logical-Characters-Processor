@@ -1,0 +1,2 @@
+blocks.UpperCaseConverter
+thirdparty.Exclamation .
